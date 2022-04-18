@@ -5,34 +5,45 @@ import iconCalendar from '../../assets/icon/fi_calendar.svg';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../../components/Loader/Loader';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCar } from '../../redux/actions/carAction';
 
 export default function Search() {
+  const dispatch = useDispatch();
 
-  const [dataList, setDataList] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const { isLoading: loadingCar, data: carData } = useSelector(
+    (state) => state.car
+  );
 
   useEffect(() => {
-    handleData()
-  }, [])
+    dispatch(getCar());
+  }, []);
 
-  const handleData = async () => {
-    setLoading(true);
-    try {
-      const res = await axios(
-        "https://rent-cars-api.herokuapp.com/customer/car"
-      );
-      setDataList(res.data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const [dataList, setDataList] = useState([]);
+  // const [loading, setLoading] = useState(false);
+  // const navigate = useNavigate();
 
-  const handleGoDetail = (id) => {
-    navigate(`/detail/${id}`)
-  }
+  // useEffect(() => {
+  //   handleData()
+  // }, [])
+
+  // const handleData = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const res = await axios(
+  //       "https://rent-cars-api.herokuapp.com/customer/car"
+  //     );
+  //     setDataList(res.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // const handleGoDetail = (id) => {
+  //   navigate(`/detail/${id}`)
+  // }
 
   return (
     <section className="page-search">
@@ -92,13 +103,15 @@ export default function Search() {
                 </div>
               </form>
             </div>
-            {loading && (<Loader />)}
+            {/* {loading && (<Loader />)} */}
             {/* End Box Form */}
             <div className="card-mobil mt-4">
               <div className="row">
                 <div className="col-md-12">
                   <div className="row">
-                    {dataList.map((item) => {
+                    {loadingCar
+                      ? 'Loading'
+                      : carData.map((item) => {
                       return(
                         <div className="col-md-4">
                           <div class="card" key={item.id}>
@@ -119,7 +132,7 @@ export default function Search() {
                                   <img src={iconCalendar} alt="icon-clock" />Tahun 2020
                               </p>
                               <div class="btn-group" aria-label="Basic example">
-                                  <button type="button" class="btn btn-pilih" onClick={() => handleGoDetail(item.id)}>Pilih Mobil
+                                  <button type="button" class="btn btn-pilih">Pilih Mobil
                                   </button>
                               </div>
                             </div>
