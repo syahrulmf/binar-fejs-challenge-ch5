@@ -1,49 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import iconUser from '../../assets/icon/fi_users.svg';
 import iconSetting from '../../assets/icon/fi_settings.svg';
 import iconCalendar from '../../assets/icon/fi_calendar.svg';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import Loader from '../../components/Loader/Loader';
+import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCar } from '../../redux/actions/carAction';
+import { saveDetailByID } from '../../redux/actions/detailAction';
 
 export default function Search() {
   const dispatch = useDispatch();
-
-  const { isLoading: loadingCar, data: carData } = useSelector(
-    (state) => state.car
-  );
+  const { isLoading: loadingCar, data: carData } = useSelector((state) => state.car);
 
   useEffect(() => {
     dispatch(getCar());
   }, []);
-
-  // const [dataList, setDataList] = useState([]);
-  // const [loading, setLoading] = useState(false);
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   handleData()
-  // }, [])
-
-  // const handleData = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const res = await axios(
-  //       "https://rent-cars-api.herokuapp.com/customer/car"
-  //     );
-  //     setDataList(res.data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const handleGoDetail = (id) => {
-  //   navigate(`/detail/${id}`)
-  // }
 
   return (
     <section className="page-search">
@@ -103,7 +73,6 @@ export default function Search() {
                 </div>
               </form>
             </div>
-            {/* {loading && (<Loader />)} */}
             {/* End Box Form */}
             <div className="card-mobil mt-4">
               <div className="row">
@@ -132,8 +101,9 @@ export default function Search() {
                                   <img src={iconCalendar} alt="icon-clock" />Tahun 2020
                               </p>
                               <div class="btn-group" aria-label="Basic example">
-                                  <button type="button" class="btn btn-pilih">Pilih Mobil
-                                  </button>
+                                  <Link className="btn btn-pilih" 
+                                    to={`/detail/${item.id}`} 
+                                    onClick={()=> dispatch(saveDetailByID(item))}>Pilih Mobil</Link>
                               </div>
                             </div>
                           </div>

@@ -1,26 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import iconUser from '../../assets/icon/fi_users.svg';
 import iconSetting from '../../assets/icon/fi_settings.svg';
 import iconCalendar from '../../assets/icon/fi_calendar.svg';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 export default function Detail() {
-  const { id } = useParams();
-  const [dataDetail, setDataDetail] = useState([])
-
-  useEffect(() => {
-    handleDetail();
-  }, [id])
-
-  const handleDetail = async () =>{
-    try {
-      const res = await axios(`https://rent-cars-api.herokuapp.com/customer/car/${id}`);
-      setDataDetail(res.data)
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  const { isLoading: loadingDetail, data: carData } = useSelector((state) => state.carDetail);
 
   return (
     <section className="detail-page">
@@ -108,28 +93,32 @@ export default function Detail() {
                     </div>
                   {/* Card Detail */}
                     <div className="col-md-4">
-                      <div class="card-detail-mobil">
-                        <div class="card-body">
-                          <h5 class="card-title d-flex justify-content-center">
-                              <img width={300} src={dataDetail.image} alt="img-car" />
-                          </h5>
-                          <p><strong>{dataDetail.name}</strong></p>
-                          <div className="icon d-flex">
-                            <p class="card-text">
-                                <img className='me-1' src={iconUser} alt="icon-key" />4 Orang
-                            </p>
-                            <p class="card-text">
-                                <img className='me-1' src={iconSetting} alt="icon-clock" />Manual
-                            </p>
-                            <p class="card-text">
-                                <img className='me-1' src={iconCalendar} alt="icon-clock" />Tahun 2020
-                            </p>
+                      {loadingDetail ? (
+                        <div>Loading... </div>
+                      ) : (
+                        <div class="card-detail-mobil">
+                          <div class="card-body">
+                            <h5 class="card-title d-flex justify-content-center">
+                                <img width={300} src={carData.image} alt="img-car" />
+                            </h5>
+                            <p><strong>{carData.name}</strong></p>
+                            <div className="icon d-flex">
+                              <p class="card-text">
+                                  <img className='me-1' src={iconUser} alt="icon-key" />4 Orang
+                              </p>
+                              <p class="card-text">
+                                  <img className='me-1' src={iconSetting} alt="icon-clock" />Manual
+                              </p>
+                              <p class="card-text">
+                                  <img className='me-1' src={iconCalendar} alt="icon-clock" />Tahun 2020
+                              </p>
+                            </div>
+                            <p>Total <span><strong>Rp.{carData.price}</strong></span></p>
+                            <button type="button" class="btn btn-lanjut">Lanjutkan Pembayaran
+                            </button>
                           </div>
-                          <p>Total <span><strong>Rp.{dataDetail.price}</strong></span></p>
-                          <button type="button" class="btn btn-lanjut">Lanjutkan Pembayaran
-                          </button>
                         </div>
-                      </div>
+                      )}
                     </div>
                   </div>
                 </div>
